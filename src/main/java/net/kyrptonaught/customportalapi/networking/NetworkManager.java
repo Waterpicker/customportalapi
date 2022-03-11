@@ -31,6 +31,7 @@ public class NetworkManager {
     }
 
     public static void onInitializeServer() {
+        register();
         PortalRegistrySyncPacket.registerSyncOnPlayerJoin();
     }
 }
