@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -102,12 +101,16 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
             cir.setReturnValue(getCustomTeleportTarget());
     }
 
-    @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;createEndSpawnPlatform(Lnet/minecraft/server/world/ServerWorld;)V"))
-    public void CPAcancelEndPlatformSpawn(ServerWorld world) {
-        if (this.didTeleport())
-            return;
-        ServerWorld.createEndSpawnPlatform(world);
-    }
+//    @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;createEndSpawnPlatform(Lnet/minecraft/server/world/ServerWorld;)V"))
+//    public void CPAcancelEndPlatformSpawn(ServerWorld world) {
+//        if (this.didTeleport())
+//            return;
+//        ServerWorld.createEndSpawnPlatform(world);
+//    }
+
+//    @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getRegistryKey()Lnet/minecraft/util/registry/RegistryKey;", ordinal = 0))
+//    public abstract RegistryKey<World> CPApreventEndCredits(ServerWorld serverWorld);
+
 
     @Inject(method = "readNbt", at = @At(value = "TAIL"))
     public void CPAreadCustomPortalFromTag(NbtCompound tag, CallbackInfo ci) {
@@ -120,4 +123,7 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
         cir.getReturnValue().putBoolean("cpadidTP", didTP);
         cir.getReturnValue().putInt("cpaCooldown", cooldown);
     }
+
+//    @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V"))
+//    public abstract void CPAmodifyWorldEventPacket(ServerPlayNetworkHandler instance, Packet<?> packet);
 }

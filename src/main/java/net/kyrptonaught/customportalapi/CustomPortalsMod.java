@@ -52,6 +52,8 @@ public class CustomPortalsMod {
     public CustomPortalsMod() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        BLOCKS.register(bus);
+
         CustomPortalsModClient.onInitializeClient(bus);
         onInitialize(bus);
         NetworkManager.onInitializeServer();
@@ -86,7 +88,7 @@ public class CustomPortalsMod {
     }
 
     public void onInitialize(IEventBus bus) {
-        bus.addListener(this::onServerStart);
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStart);
         CustomPortalApiRegistry.registerPortalFrameTester(VANILLAPORTAL_FRAMETESTER, VanillaPortalAreaHelper::new);
         CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
         MinecraftForge.EVENT_BUS.addListener(this::onRightClickItem);

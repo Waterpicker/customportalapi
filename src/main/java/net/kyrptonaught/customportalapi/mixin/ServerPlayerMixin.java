@@ -17,14 +17,12 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class ServerPlayerMixin implements EntityInCustomPortal {
+public abstract class ServerPlayerMixin extends PlayerMixin implements EntityInCustomPortal {
     int portalFrameBlockID;
 
-    @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getRegistryKey()Lnet/minecraft/util/registry/RegistryKey;", ordinal = 0))
     public RegistryKey<World> CPApreventEndCredits(ServerWorld serverWorld) {
         if (this.didTeleport()) {
             Block portalFrame = CustomPortalHelper.getPortalBase(serverWorld, getInPortalPos());
@@ -39,7 +37,6 @@ public abstract class ServerPlayerMixin implements EntityInCustomPortal {
         if (this.didTeleport()) ci.cancel();
     }
 
-    @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V"))
     public void CPAmodifyWorldEventPacket(ServerPlayNetworkHandler instance, Packet<?> packet) {
         if (packet instanceof WorldEventS2CPacket && portalFrameBlockID != 0) {
             instance.sendPacket(new WorldEventS2CPacket(1032, BlockPos.ORIGIN, portalFrameBlockID, false));
