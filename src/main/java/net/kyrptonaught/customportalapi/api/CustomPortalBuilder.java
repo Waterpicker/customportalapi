@@ -15,6 +15,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -151,7 +152,7 @@ public class CustomPortalBuilder {
     /**
      * Specify a custom block to be used as the portal block. Block must extend CustomPortalBlock
      */
-    public CustomPortalBuilder customPortalBlock(CustomPortalBlock portalBlock) {
+    public CustomPortalBuilder customPortalBlock(RegistryObject<CustomPortalBlock> portalBlock) {
         portalLink.setPortalBlock(portalBlock);
         return this;
     }

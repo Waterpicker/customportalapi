@@ -2,8 +2,6 @@ package net.kyrptonaught.customportalapi.mixin.client;
 
 
 import com.mojang.authlib.GameProfile;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.interfaces.ClientPlayerInColoredPortal;
 import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
@@ -18,6 +16,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Environment(EnvType.CLIENT)
+@OnlyIn(Dist.CLIENT)
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerMixin extends PlayerEntity implements EntityInCustomPortal, ClientPlayerInColoredPortal {
 
@@ -79,7 +79,7 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements EntityIn
     private void updateCustomNausea(int previousColor) {
         this.lastNauseaStrength = this.nextNauseaStrength;
         if (this.getTimeInPortal() > 0) {
-            if (this.client.currentScreen != null && !this.client.currentScreen.isPauseScreen()) {
+            if (this.client.currentScreen != null && !this.client.currentScreen.shouldPause()) {
                 if (this.client.currentScreen instanceof HandledScreen) {
                     this.closeHandledScreen();
                 }

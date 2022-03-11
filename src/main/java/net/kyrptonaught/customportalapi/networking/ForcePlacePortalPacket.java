@@ -1,33 +1,45 @@
 package net.kyrptonaught.customportalapi.networking;
 
-import io.netty.buffer.Unpooled;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 
-public class ForcePlacePortalPacket {
+import java.util.Optional;
+import java.util.function.Supplier;
+
+public record ForcePlacePortalPacket(BlockPos pos) {
+
     public static void sendForcePacket(ServerPlayerEntity player, BlockPos pos) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeBlockPos(pos);
-        ServerPlayNetworking.send(player, NetworkManager.PLACE_PORTAL, buf);
+        NetworkManager.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ForcePlacePortalPacket(pos));
     }
 
+    public static ForcePlacePortalPacket decode(PacketByteBuf buf) {
+        return new ForcePlacePortalPacket(buf.readBlockPos());
+    }
 
-    @Environment(EnvType.CLIENT)
-    public static void registerReceive() {
-        ClientPlayNetworking.registerGlobalReceiver(NetworkManager.PLACE_PORTAL, (client, handler, packet, sender) -> {
-            BlockPos blockPos = packet.readBlockPos();
-            client.execute(() -> {
-                BlockState oldState = client.world.getBlockState(blockPos);
-                client.world.setBlockState(blockPos, CustomPortalHelper.blockWithAxis(CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), CustomPortalHelper.getAxisFrom(oldState)));
-            });
+    public static void encode(ForcePlacePortalPacket packet, PacketByteBuf buf) {
+        buf.writeBlockPos(packet.pos);
+    }
+
+    public static void handle(ForcePlacePortalPacket packet, Supplier<NetworkEvent.Context> contextSupplier) {
+        MinecraftClient.getInstance().execute(() -> {
+            World world = MinecraftClient.getInstance().world;
+            BlockState oldState = world.getBlockState(packet.pos());
+            world.setBlockState(packet.pos(), CustomPortalHelper.blockWithAxis(CustomPortalsMod.getDefaultPortalBlock().get().getDefaultState(), CustomPortalHelper.getAxisFrom(oldState)));
         });
+        contextSupplier.get().setPacketHandled(true);
+    }
+
+    public static void register(SimpleChannel channel, Integer id) {
+        channel.registerMessage(id, ForcePlacePortalPacket.class, ForcePlacePortalPacket::encode, ForcePlacePortalPacket::decode, ForcePlacePortalPacket::handle, Optional.of(NetworkDirection.PLAY_TO_CLIENT));
     }
 }

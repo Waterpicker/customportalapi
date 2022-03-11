@@ -1,7 +1,5 @@
 package net.kyrptonaught.customportalapi.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
@@ -12,13 +10,15 @@ import net.minecraft.client.particle.PortalParticle;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class CustomPortalParticle extends PortalParticle {
     protected CustomPortalParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
         super(clientWorld, d, e, f, g, h, i);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleFactory<BlockStateParticleEffect> {
         private final SpriteProvider spriteProvider;
 

@@ -1,7 +1,5 @@
 package net.kyrptonaught.customportalapi;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
 import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
@@ -26,6 +24,8 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Random;
 
@@ -66,12 +66,12 @@ public class CustomPortalBlock extends Block {
         builder.add(AXIS);
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
         return ItemStack.EMPTY;
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (random.nextInt(100) == 0) {
             world.playSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_PORTAL_AMBIENT, SoundCategory.BLOCKS, 0.5F, random.nextFloat() * 0.4F + 0.8F, false);
@@ -92,7 +92,7 @@ public class CustomPortalBlock extends Block {
                 f = (double) pos.getZ() + 0.5D + 0.25D * (double) k;
                 j = random.nextFloat() * 2.0F * (float) k;
             }
-            world.addParticle(new BlockStateParticleEffect(CustomPortalsModClient.CUSTOMPORTALPARTICLE, getPortalBase(world, pos).getDefaultState()), d, e, f, g, h, j);
+            world.addParticle(new BlockStateParticleEffect(CustomPortalsModClient.CUSTOMPORTALPARTICLE.get(), getPortalBase(world, pos).getDefaultState()), d, e, f, g, h, j);
         }
     }
 
