@@ -8,14 +8,13 @@ import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Consumer;
 
 public class PortalLink {
     public Identifier block;
     public PortalIgnitionSource portalIgnitionSource = PortalIgnitionSource.FIRE;
-    private RegistryObject<CustomPortalBlock> portalBlock = CustomPortalsMod.portalBlock;
+    private CustomPortalBlock portalBlock = CustomPortalsMod.portalBlock;
     public Identifier dimID;
     public Identifier returnDimID = new Identifier("overworld");
     public boolean onlyIgnitableInReturnDim = false;
@@ -38,11 +37,11 @@ public class PortalLink {
         this.colorID = colorID;
     }
 
-    public RegistryObject<CustomPortalBlock> getPortalBlock() {
+    public CustomPortalBlock getPortalBlock() {
         return portalBlock;
     }
 
-    public void setPortalBlock(RegistryObject<CustomPortalBlock> block) {
+    public void setPortalBlock(CustomPortalBlock block) {
         this.portalBlock = block;
     }
 

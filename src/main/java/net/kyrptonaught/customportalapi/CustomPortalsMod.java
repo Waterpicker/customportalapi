@@ -1,6 +1,5 @@
 package net.kyrptonaught.customportalapi;
 
-import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
 import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
 import net.kyrptonaught.customportalapi.networking.NetworkManager;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
@@ -9,12 +8,10 @@ import net.kyrptonaught.customportalapi.portal.frame.FlatPortalAreaHelper;
 import net.kyrptonaught.customportalapi.portal.frame.VanillaPortalAreaHelper;
 import net.kyrptonaught.customportalapi.portal.linking.PortalLinkingStorage;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -31,7 +28,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 
@@ -43,7 +39,7 @@ public class CustomPortalsMod {
 
     public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(Block.class, MOD_ID);
 
-    public static RegistryObject<CustomPortalBlock> portalBlock;
+    public static CustomPortalBlock portalBlock;
     public static HashMap<Identifier, RegistryKey<World>> dims = new HashMap<>();
     public static Identifier VANILLAPORTAL_FRAMETESTER = new Identifier(MOD_ID, "vanillanether");
     public static Identifier FLATPORTAL_FRAMETESTER = new Identifier(MOD_ID, "flat");
@@ -93,23 +89,24 @@ public class CustomPortalsMod {
         CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
         MinecraftForge.EVENT_BUS.addListener(this::onRightClickItem);
 
-        CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new Identifier("the_nether")).lightWithWater().tintColor(46, 5, 25).registerPortal();
-        CustomPortalBuilder.beginPortal().frameBlock(Blocks.DIAMOND_BLOCK).destDimID(new Identifier("the_nether")).tintColor(66, 135, 245).registerPortal();
-        CustomPortalBuilder.beginPortal().frameBlock(Blocks.COBBLESTONE).lightWithItem(Items.STICK).destDimID(new Identifier("the_end")).tintColor(45, 24, 45).flatPortal().registerPortal();
-        CustomPortalBuilder.beginPortal().frameBlock(Blocks.EMERALD_BLOCK).lightWithWater().destDimID(new Identifier("the_end")).tintColor(25, 76, 156).flatPortal().registerPortal();
+//        CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new Identifier("the_nether")).lightWithWater().tintColor(46, 5, 25).registerPortal();
+//        CustomPortalBuilder.beginPortal().frameBlock(Blocks.DIAMOND_BLOCK).destDimID(new Identifier("the_nether")).tintColor(66, 135, 245).registerPortal();
+//        CustomPortalBuilder.beginPortal().frameBlock(Blocks.COBBLESTONE).lightWithItem(Items.STICK).destDimID(new Identifier("the_end")).tintColor(45, 24, 45).flatPortal().registerPortal();
+//        CustomPortalBuilder.beginPortal().frameBlock(Blocks.EMERALD_BLOCK).lightWithWater().destDimID(new Identifier("the_end")).tintColor(25, 76, 156).flatPortal().registerPortal();
     }
 
     public static void logError(String message) {
         System.out.println("[" + MOD_ID + "]ERROR: " + message);
     }
 
-    public static RegistryObject<CustomPortalBlock> getDefaultPortalBlock() {
+    public static CustomPortalBlock getDefaultPortalBlock() {
         return portalBlock;
     }
 
     // to guarantee block exists before use, unsure how safe this is but works for now. Don't want to switch to using a custom entrypoint to break compatibility with existing mods just yet
     //todo fix this with CustomPortalBuilder?
     static {
-        portalBlock = BLOCKS.register("customportalblock", () -> new CustomPortalBlock(Block.Settings.of(Material.PORTAL).noCollision().strength(-1).sounds(BlockSoundGroup.GLASS).luminance(state -> 11)));
+        portalBlock = new CustomPortalBlock(Block.Settings.of(Material.PORTAL).noCollision().strength(-1).sounds(BlockSoundGroup.GLASS).luminance(state -> 11));
+        BLOCKS.register("customportalblock", () -> portalBlock);
     }
 }

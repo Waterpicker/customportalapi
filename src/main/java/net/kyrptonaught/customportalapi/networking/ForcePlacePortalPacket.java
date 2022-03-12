@@ -34,7 +34,7 @@ public record ForcePlacePortalPacket(BlockPos pos) {
         MinecraftClient.getInstance().execute(() -> {
             World world = MinecraftClient.getInstance().world;
             BlockState oldState = world.getBlockState(packet.pos());
-            world.setBlockState(packet.pos(), CustomPortalHelper.blockWithAxis(CustomPortalsMod.getDefaultPortalBlock().get().getDefaultState(), CustomPortalHelper.getAxisFrom(oldState)));
+            world.setBlockState(packet.pos(), CustomPortalHelper.blockWithAxis(CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), CustomPortalHelper.getAxisFrom(oldState)));
         });
         contextSupplier.get().setPacketHandled(true);
     }
