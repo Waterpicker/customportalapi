@@ -16,7 +16,7 @@ displayName="Custom Portal Api [Forge]" #mandatory
 
 displayURL="https://github.com/kyrptonaught/customportalapi" #optional
 
-logoFile="assets/customportalapi/icon.png" #optional
+logoFile="icon.png" #optional
 
 credits="kyrptonaught (main author of the fabric version), Waterpicker (for the forge port) ,Mysticpasta1 (for the forge toml)" #optional
 
