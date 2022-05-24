@@ -9,8 +9,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 public class PortalIgnitionSource {
@@ -50,11 +52,11 @@ public class PortalIgnitionSource {
     }
 
     public boolean isWater() {
-        return FluidTags.WATER.contains(Registry.FLUID.get(ignitionSourceID));
+        return Optional.ofNullable(ForgeRegistries.FLUIDS.getValue(ignitionSourceID)).filter(a -> a.isIn(FluidTags.WATER)).isPresent();
     }
 
     public boolean isLava() {
-        return FluidTags.LAVA.contains(Registry.FLUID.get(ignitionSourceID));
+        return Optional.ofNullable(ForgeRegistries.FLUIDS.getValue(ignitionSourceID)).filter(a -> a.isIn(FluidTags.LAVA)).isPresent();
     }
 
     public static boolean isRegisteredIgnitionSourceWith(Item item) {

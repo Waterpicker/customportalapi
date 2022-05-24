@@ -152,7 +152,7 @@ public class CustomPortalBuilder {
     /**
      * Specify a custom block to be used as the portal block. Block must extend CustomPortalBlock
      */
-    public CustomPortalBuilder customPortalBlock(CustomPortalBlock portalBlock) {
+    public CustomPortalBuilder customPortalBlock(RegistryObject<CustomPortalBlock> portalBlock) {
         portalLink.setPortalBlock(portalBlock);
         return this;
     }

@@ -1,6 +1,5 @@
 package net.kyrptonaught.customportalapi;
 
-import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
 import net.kyrptonaught.customportalapi.init.ParticleInit;
 import net.kyrptonaught.customportalapi.networking.NetworkManager;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
@@ -31,6 +30,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 
@@ -41,9 +42,9 @@ import static net.kyrptonaught.customportalapi.CustomPortalsMod.MOD_ID;
 public class CustomPortalsMod {
     public static final String MOD_ID = "customportalapi";
 
-    public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(Block.class, MOD_ID);
+    public static DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
-    public static CustomPortalBlock portalBlock;
+    public static RegistryObject<CustomPortalBlock> portalBlock = BLOCKS.register("customportalblock", () -> new CustomPortalBlock(Block.Settings.of(Material.PORTAL).noCollision().strength(-1).sounds(BlockSoundGroup.GLASS).luminance(state -> 11)));
     public static HashMap<Identifier, RegistryKey<World>> dims = new HashMap<>();
     public static Identifier VANILLAPORTAL_FRAMETESTER = new Identifier(MOD_ID, "vanillanether");
     public static Identifier FLATPORTAL_FRAMETESTER = new Identifier(MOD_ID, "flat");
@@ -103,15 +104,11 @@ public class CustomPortalsMod {
     }
 
     public static CustomPortalBlock getDefaultPortalBlock() {
-        return portalBlock;
+        return portalBlock.get();
     }
 
     // to guarantee block exists before use, unsure how safe this is but works for now. Don't want to switch to using a custom entrypoint to break compatibility with existing mods just yet
     //todo fix this with CustomPortalBuilder?
-    static {
-        portalBlock = new CustomPortalBlock(Block.Settings.of(Material.PORTAL).noCollision().strength(-1).sounds(BlockSoundGroup.GLASS).luminance(state -> 11));
-        BLOCKS.register("customportalblock", () -> portalBlock);
-    }
 
     @SubscribeEvent
     public static void onCommonStartUp(FMLCommonSetupEvent event) {
