@@ -15,8 +15,8 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.chunk.ChunkRendererRegion;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -24,8 +24,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 @Mod.EventBusSubscriber(modid = CustomPortalsMod.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CustomPortalsModClient {
 
-    @SubscribeEvent
-    public static void onBlockColors(ColorHandlerEvent.Block event) {
+    @SuppressWarnings("deprecation")
+	@SubscribeEvent
+    public static void onBlockColors(RegisterColorHandlersEvent.Block event) {
         event.getBlockColors().registerColorProvider((state, world, pos, tintIndex) -> {
             if (pos != null && world instanceof ChunkRendererRegion) {
                 Block block = CustomPortalHelper.getPortalBase(((ChunkRendererRegionAccessor) world).getWorld(), pos);
@@ -38,12 +39,14 @@ public class CustomPortalsModClient {
 
 
 
-    @SubscribeEvent
-    public static void onParticleFactoryRegistry(final ParticleFactoryRegisterEvent event) {
+    @SuppressWarnings({ "resource", "deprecation" })
+	@SubscribeEvent
+    public static void onParticleFactoryRegistry(final RegisterParticleProvidersEvent event) {
         MinecraftClient.getInstance().particleManager.registerFactory(ParticleInit.CUSTOMPORTALPARTICLE.get(), CustomPortalParticle.Factory::new);
     }
 
-    @SubscribeEvent
+    @SuppressWarnings("removal")
+	@SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> RenderLayers.setRenderLayer(CustomPortalsMod.portalBlock.get(), RenderLayer.getTranslucent()));
 

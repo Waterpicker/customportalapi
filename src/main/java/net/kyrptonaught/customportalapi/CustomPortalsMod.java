@@ -12,13 +12,13 @@ import net.minecraft.block.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -67,8 +67,8 @@ public class CustomPortalsMod {
     }
 
     private void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
-        PlayerEntity player = event.getPlayer();
-        World world = event.getWorld();
+        PlayerEntity player = event.getEntity();
+        World world = event.getLevel();
         Hand hand = event.getHand();
 
         ItemStack stack = player.getStackInHand(hand);
